@@ -1,0 +1,17 @@
+Analysis of Job Data Pipeline Results
+
+1. Root Cause of "Honest Failure":
+The pipeline successfully implements the rigorous two-gate validation required (must be a Data Engineer role + must explicitly state "worldwide" availability or synonyms). After fetching nearly 300 jobs across 4 active global job board APIs, exactly 4 jobs matched these strict criteria simultaneously. The vast majority of remote jobs are regionally restricted (e.g., US Only, UK Only, Americas only). This proves the filtering logic is robust and functioning as mandated, avoiding false positives (e.g., Data Analysts or regional jobs).
+
+2. How to reach the 30-job threshold strictly naturally:
+Since we cannot relax the validation heuristics (i.e., we cannot allow "Data Analysts" or "US Only" jobs), the only mathematical way to achieve >= 30 accepted jobs is to drastically increase the total volume (N) of fetched jobs or integrate sources with a higher density of purely global jobs.
+
+Recommended Actions without relaxing criteria:
+a) Integrate Large Aggregators via API/Scraping:
+- LinkedIn / Indeed (filtered heavily by "Worldwide").
+- Wellfound (formerly AngelList), which has a higher propensity of borderless crypto/startup DE roles.
+- Otta (high volume of startups hiring globally).
+b) Deeper Pagination:
+- Currently, APIs like Jobicy and Arbeitnow may only be returning the first page (or top 50-100 results) of recent jobs. Implementing deep pagination in the fetchers (e.g., fetching 1000+ jobs per source) would significantly increase the chances of capturing the rare true-worldwide DE roles.
+c) Improve HackerNews Parsing:
+- We currently pull 50 hits from the HN Algolia API. Expanding `hitsPerPage` to 1000 or scanning multiple months of "Who is Hiring" threads could yield more valid DE roles.

@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Job {
+  id                     String   @id @default(uuid())
+  title                  String
+  company                String
+  location               String
+  description            String
+  url                    String   @unique
+  sourceName             String
+  sourceUrl              String?
+  externalId             String?
+  salary                 String?
+  publishedAt            DateTime?
+  discoveredAt           DateTime @default(now())
+  status                 String   // ACCEPTED, REJECTED, DUPLICATE, INVALID
+  rejectionReason        String?
+  acceptedReason         String?
+  worldwideEvidenceQuote String?
+  roleEvidenceQuote      String?
+  rawPayloadJson         String?
+}
+
+model IngestionRun {
+  id              String   @id @default(uuid())
+  startedAt       DateTime @default(now())
+  finishedAt      DateTime?
+  totalFetched    Int      @default(0)
+  totalAccepted   Int      @default(0)
+  totalRejected   Int      @default(0)
+  totalDuplicate  Int      @default(0)
+  totalInvalid    Int      @default(0)
+  success         Boolean  @default(false)
+  failureReason   String?
+}
